@@ -20,7 +20,7 @@ function drawDoc(){const d=cur,c=calc(d),lbl=d.type==='Estimate';
  <table><tr><th>Description</th><th class="n">Qty</th><th class="n">Rate</th><th class="n">Amount</th></tr>${d.items.filter(i=>i.d||i.r).map(i=>`<tr><td>${esc(i.d)}</td><td class="n">${+i.q||0}</td><td class="n">${money(+i.r||0)}</td><td class="n">${money((+i.q||0)*(+i.r||0))}</td></tr>`).join('')}</table>
  <div class="tot"><div><span>Subtotal</span><span>${money(c.sub)}</span></div>${+d.disc?`<div><span>Discount</span><span>-${money(+d.disc)}</span></div>`:''}${+biz.taxr?`<div><span>${esc(biz.taxn)} (${+biz.taxr}%)</span><span>${money(c.tax)}</span></div>`:''}<div><span>Total</span><span>${money(c.tot)}</span></div>${+d.dep?`<div><span>Deposit paid</span><span>-${money(+d.dep)}</span></div>`:''}<div class="g"><span>${lbl?'Estimate total':'Balance due'}</span><span>${money(lbl?c.tot:c.bal)}</span></div></div>
  ${d.notes?`<p class="small" style="white-space:pre-line;margin-top:22px">${esc(d.notes)}</p>`:''}${biz.pay&&!lbl?`<div style="margin-top:14px"><div class="small muted">HOW TO PAY</div><div class="small" style="white-space:pre-line">${esc(biz.pay)}</div></div>`:''}
- ${pro?'':'<div class="wm">Made with TradeBill - free invoice maker for trades</div>'}`}
+ ${pro?'':'<div class="wm">Made with TradeBill - free invoice maker for trades<br>Developed by Chaudhry Noman &middot; Powered by <a href="https://alphablue.digital" style="color:inherit;text-decoration:none">Alpha Blue Digital</a></div>'}`}
 function quota(){const q=$('quota');if(pro){q.className='banner';q.textContent='Pro: unlimited documents.';}else{const left=Math.max(0,TB.FREE_DOCS_PER_MONTH-usedThisMonth());q.className='banner'+(left?'':' warn');q.textContent=left?`Free plan: ${left} of ${TB.FREE_DOCS_PER_MONTH} documents left this month.`:'You used all free documents this month. Go Pro for unlimited.'}
  $('plan').textContent=pro?'Pro':'Free';$('plan').className='tag'+(pro?' paid':'');$('upg').style.display=pro?'none':''}
 function load(d){cur=JSON.parse(JSON.stringify(d));['type','num','date','due','cname','caddr','disc','dep','notes'].forEach(k=>$(k).value=cur[k]);drawItems();drawDoc();quota();tab('edit')}
@@ -55,3 +55,4 @@ bindBiz();load(blank());clients();
 if(pro&&get('tb_key',''))validate(get('tb_key','')).then(r=>{if(r.ok===false){pro=false;set('tb_pro',false);quota();drawDoc()}});
 if(location.search.includes('upgrade'))modal();
 })();
+
